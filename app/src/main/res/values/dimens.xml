@@ -2,13 +2,21 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
 
     <dimen name="dimen_4dp">4dp</dimen>
+    <dimen name="dimen_8dp">8dp</dimen>
     <dimen name="dimen_16dp">16dp</dimen>
     <dimen name="dimen_32dp">32dp</dimen>
-
+    <dimen name="dimen_56dp">56dp</dimen>
     <dimen name="pressed_translation_z">12dp</dimen>
     <dimen name="elevation">6dp</dimen>
 
     <dimen name="text_24sp">24sp</dimen>
     <dimen name="text_19sp">19sp</dimen>
+
+
+    <!-- Widget Configuration -->
+    <dimen name="widget_detail_default_width">250dp</dimen>
+    <dimen name="widget_detail_default_height">180dp</dimen>
+    <dimen name="widget_detail_min_resize_width">220dp</dimen>
+    <dimen name="widget_detail_min_resize_height">@dimen/widget_detail_default_height</dimen>
 
 </resources>

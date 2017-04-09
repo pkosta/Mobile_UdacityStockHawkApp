@@ -1,4 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2017. The Android Open Source Project
+  -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,32 +11,32 @@
         android:id="@+id/tv_stock_symbol"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_32dp"
         android:layout_marginStart="@dimen/dimen_16dp"
-        android:textStyle="bold"
+        android:layout_marginTop="@dimen/dimen_32dp"
         android:textSize="@dimen/text_24sp"
-        tools:text="Stock Symbol"/>
+        android:textStyle="bold"
+        tools:text="Stock Symbol" />
 
     <TextView
         android:id="@+id/tv_stock_price"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_stock_symbol"
-        android:layout_marginTop="@dimen/dimen_16dp"
         android:layout_marginStart="@dimen/dimen_16dp"
+        android:layout_marginTop="@dimen/dimen_16dp"
         android:textSize="@dimen/text_19sp"
         tools:text="Stock Price" />
 
-    
+
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/line_graph_stock_price_overtime"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/tv_stock_price"
-        android:layout_marginTop="@dimen/dimen_32dp"
-        android:layout_marginStart="@dimen/dimen_16dp"
+        android:layout_marginBottom="@dimen/dimen_16dp"
         android:layout_marginEnd="@dimen/dimen_16dp"
-        android:layout_marginBottom="@dimen/dimen_16dp"/>
+        android:layout_marginStart="@dimen/dimen_16dp"
+        android:layout_marginTop="@dimen/dimen_32dp" />
 
 
 </RelativeLayout>

@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2017. The Android Open Source Project
+ */
 package com.udacity.stockhawk.ui;
 
 import android.content.Intent;
@@ -18,7 +21,10 @@ import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.udacity.stockhawk.R;
 import com.udacity.stockhawk.utility.BundleConstant;
+import com.udacity.stockhawk.utility.GraphConstant;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,6 +33,10 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+/*
+ * Created by Palash on 09/04/17.
+ */
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -53,13 +63,18 @@ public class DetailActivity extends AppCompatActivity {
 
         setChartData();
 
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
+
     }
 
     /**
      * method to get the data from intent and set to the views.
      */
     private void setIntentData() {
-
+        DecimalFormat dollarFormat = (DecimalFormat) NumberFormat.getCurrencyInstance(Locale.US);
         Intent startingIntent = getIntent();
         if (startingIntent != null && startingIntent.hasExtra(BundleConstant.BUNDLE)) {
             Bundle bundle = startingIntent.getBundleExtra(BundleConstant.BUNDLE);
@@ -69,7 +84,7 @@ public class DetailActivity extends AppCompatActivity {
                 }
 
                 if (bundle.containsKey(BundleConstant.BUNDLE_STOCK_PRICE)) {
-                    mTvStockPrice.setText(bundle.getString(BundleConstant.BUNDLE_STOCK_PRICE));
+                    mTvStockPrice.setText(dollarFormat.format(bundle.getFloat(BundleConstant.BUNDLE_STOCK_PRICE)));
                 }
 
                 if (bundle.containsKey(BundleConstant.BUNDLE_STOCK_HISTORY)) {
@@ -80,22 +95,25 @@ public class DetailActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * method to configure the chart data
+     */
     private void setChartData() {
 
         // enable scaling and dragging
-        mLineGraphStockPriceOvertime.setDragEnabled(false);
-        mLineGraphStockPriceOvertime.setScaleEnabled(false);
+        mLineGraphStockPriceOvertime.setDragEnabled(true);
+        mLineGraphStockPriceOvertime.setScaleEnabled(true);
         mLineGraphStockPriceOvertime.setDrawGridBackground(false);
-        mLineGraphStockPriceOvertime.setHighlightPerDragEnabled(false);
+        mLineGraphStockPriceOvertime.setHighlightPerDragEnabled(true);
 
-        mLineGraphStockPriceOvertime.animateX(2500);
+        mLineGraphStockPriceOvertime.animateX(GraphConstant.ANIMATE_TIME_IN_MILLIS);
 
         // get the legend (only possible after setting data)
         Legend l = mLineGraphStockPriceOvertime.getLegend();
 
         // modify the legend ...
         l.setForm(Legend.LegendForm.LINE);
-        l.setTextSize(11f);
+        l.setTextSize(GraphConstant.GRAPH_TEXT_SIZE);
         l.setTextColor(Color.WHITE);
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
         l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
@@ -103,7 +121,7 @@ public class DetailActivity extends AppCompatActivity {
         l.setDrawInside(false);
 
         XAxis xAxis = mLineGraphStockPriceOvertime.getXAxis();
-        xAxis.setTextSize(11f);
+        xAxis.setTextSize(GraphConstant.GRAPH_TEXT_SIZE);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setTextColor(Color.WHITE);
         xAxis.setDrawGridLines(false);
@@ -115,15 +133,18 @@ public class DetailActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * method to create the data from string history builder.
+     * @return LineDataSet, data set with which we need to plot the graph.
+     */
     private LineDataSet createXAxisDataFromHistory() {
-        float maxYValue = 50f;
-        float bufferYValue = 100f;
-        float minYValue = 0f;
+        float maxYValue = GraphConstant.DEFAULT_MAX_Y_VALUE;
+
         List<Entry> entries = new ArrayList<>();
         String[] data = mHistoryData.split("\\n");
         int linesLength = data.length;
         final String[] dates = new String[linesLength];
-        SimpleDateFormat formatter = new SimpleDateFormat("MM/yy", Locale.US);
+        SimpleDateFormat formatter = new SimpleDateFormat(GraphConstant.DATE_FORMAT_Y_AXIS, Locale.US);
         Calendar calendar = Calendar.getInstance();
         for (int i = 0; i < linesLength; i++) {
             String[] dateAndPrice = data[linesLength - i - 1].split(",");
@@ -138,13 +159,13 @@ public class DetailActivity extends AppCompatActivity {
         // configure y axis.
         YAxis leftAxis = mLineGraphStockPriceOvertime.getAxisLeft();
         leftAxis.setTextColor(ColorTemplate.getHoloBlue());
-        leftAxis.setAxisMaximum(maxYValue + bufferYValue);
-        leftAxis.setAxisMinimum(minYValue);
+        leftAxis.setAxisMaximum(maxYValue + GraphConstant.BUFFER_Y_VALUE);
+        leftAxis.setAxisMinimum(GraphConstant.DEFAULT_MIN_Y_VALUE);
         leftAxis.setDrawGridLines(true);
         leftAxis.setGranularityEnabled(true);
 
         // configure x axis.
-        LineDataSet dataSet = new LineDataSet(entries, "Close Price");
+        LineDataSet dataSet = new LineDataSet(entries, getString(R.string.graph_legend_text));
         XAxis xAxis = mLineGraphStockPriceOvertime.getXAxis();
         xAxis.setValueFormatter(new IAxisValueFormatter() {
 
@@ -170,9 +191,9 @@ public class DetailActivity extends AppCompatActivity {
         closePriceSet.setAxisDependency(YAxis.AxisDependency.LEFT);
         closePriceSet.setColor(ColorTemplate.getHoloBlue());
         closePriceSet.setCircleColor(Color.WHITE);
-        closePriceSet.setLineWidth(2f);
-        closePriceSet.setCircleRadius(3f);
-        closePriceSet.setFillAlpha(65);
+        closePriceSet.setLineWidth(GraphConstant.DATA_LINE_WIDTH);
+        closePriceSet.setCircleRadius(GraphConstant.CIRCLE_RADIUS);
+        closePriceSet.setFillAlpha(GraphConstant.FILL_ALPHA);
         closePriceSet.setFillColor(ColorTemplate.getHoloBlue());
         closePriceSet.setHighLightColor(Color.rgb(244, 117, 117));
         closePriceSet.setDrawCircleHole(false);
@@ -180,11 +201,10 @@ public class DetailActivity extends AppCompatActivity {
         // create a data object with the datasets
         LineData data = new LineData(closePriceSet);
         data.setValueTextColor(Color.WHITE);
-        data.setValueTextSize(9f);
+        data.setValueTextSize(GraphConstant.DATA_VALUE_TEXT_SIZE);
 
         // set data
         mLineGraphStockPriceOvertime.setData(data);
     }
-
 
 }

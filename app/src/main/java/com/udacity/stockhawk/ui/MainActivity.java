@@ -34,6 +34,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         SwipeRefreshLayout.OnRefreshListener,
         StockAdapter.StockAdapterOnClickHandler {
 
+    private static final String ACTION_DATA_UPDATED = "com.udacity.stockhawk.ACTION_DATA_UPDATED";
+
     private static final int STOCK_LOADER = 0;
     @SuppressWarnings("WeakerAccess")
     @BindView(R.id.recycler_view)
@@ -52,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         Bundle bundle = new Bundle();
         bundle.putString(BundleConstant.BUNDLE_STOCK_SYMBOL, symbol);
-        bundle.putString(BundleConstant.BUNDLE_STOCK_PRICE, String.valueOf(price));
+        bundle.putFloat(BundleConstant.BUNDLE_STOCK_PRICE, price);
         bundle.putString(BundleConstant.BUNDLE_STOCK_HISTORY, history);
         Intent detailActivityIntent = new Intent(this, DetailActivity.class);
         detailActivityIntent.putExtra(BundleConstant.BUNDLE, bundle);
@@ -89,6 +91,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 String symbol = adapter.getSymbolAtPosition(viewHolder.getAdapterPosition());
                 PrefUtils.removeStock(MainActivity.this, symbol);
                 getContentResolver().delete(Contract.Quote.makeUriForStock(symbol), null, null);
+                Intent dataUpdatedIntent = new Intent(ACTION_DATA_UPDATED);
+                sendBroadcast(dataUpdatedIntent);
             }
         }).attachToRecyclerView(stockRecyclerView);
 
@@ -124,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     public void button(@SuppressWarnings("UnusedParameters") View view) {
-        new AddStockDialog().show(getFragmentManager(), "StockDialogFragment");
+        new AddStockDialog().show(getFragmentManager(), getString(R.string.dialog_fragment_tag));
     }
 
     void addStock(String symbol) {

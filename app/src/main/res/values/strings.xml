@@ -32,4 +32,14 @@
     <string name="toast_stock_added_no_connectivity">Symbol %s added. Will refresh when network available.</string>
     <string name="toast_no_connectivity">Will refresh when network available.</string>
 
+    <string name="empty_stock_list">No Stock Information Available</string>
+
+    <string name="graph_legend_text">Close Price</string>
+
+    <string name="content_description_floating_button">Add Stock</string>
+
+    <string name="dialog_fragment_tag" translatable="false">StockDialogFragment</string>
+    
+    <string name="invalid_add_stock_message">Stock Not Exist</string>
+
 </resources>
